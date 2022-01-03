@@ -1,3 +1,17 @@
+import pandas as pd
+import numpy as np
+
+# Constants:
+color1 = '#9BC6AF' #pale green
+color2 = '#B02D3A' #dark peach
+color3 = '#CB7969' #peach
+
+# Import Municipality and Industrial data for each year per county or state-wide
+def import_data(region, year):
+    df = pd.read_csv("./data/" + year + "_MI_" + region + ".csv")
+    return df
+
+
 def format_table(df, title):
     
     import plotly.graph_objects as go
@@ -95,3 +109,27 @@ def plot_state_totals(df, color1, color2, color3):
     )
 
     fig.show()
+    
+def plot_avg_by_type(df_mean, title):
+    
+    import plotly.express as px
+
+    df_means_t = df_mean.transpose().iloc[33:]
+    df_means_t = df_means_t.assign(pot_or_sec = ['Potable','Potable','Potable','Potable','Secondary','Secondary', 'Secondary', 'Secondary'])
+    df_means_t = df_means_t.assign(property_type = ['Residential', 'Commercial', 'Institutional', 'Industrial', 'Residential', 'Commercial', 'Institutional', 'Industrial'])
+
+    fig = px.bar(df_means_t, 
+                 x="mean", 
+                 y="pot_or_sec", 
+                 color="property_type", 
+                 title="Wide-Form Input",
+                 orientation='h')
+    # Add axis labels, title, etc.
+    fig.update_layout(
+        title=title,
+        xaxis_title="Average % of GPCD Water Usage",
+        yaxis_title="Type of Water Usage",
+        legend_title="Property Type"
+    )
+    
+    return fig.show()
