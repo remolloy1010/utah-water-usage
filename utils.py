@@ -110,13 +110,13 @@ def plot_state_totals(df, color1, color2, color3):
 
     fig.show()
     
-def plot_avg_by_type(df_mean, title):
+def plot_avg_property_type(df_mean, title):
     
     import plotly.express as px
 
-    df_means_t = df_mean.transpose().iloc[33:]
+    df_means_t = df_mean.transpose().iloc[33:41]
     df_means_t = df_means_t.assign(pot_or_sec = ['Potable','Potable','Potable','Potable','Secondary','Secondary', 'Secondary', 'Secondary'])
-    df_means_t = df_means_t.assign(property_type = ['Residential', 'Commercial', 'Institutional', 'Industrial', 'Residential', 'Commercial', 'Institutional', 'Industrial'])
+    df_means_t = df_means_t.assign(property_type = ['Residential', 'Commercial', 'Institutional', 'Industrial', 'Residential', 'Commercial', 'Institutional', 'Industrial'])  
 
     fig = px.bar(df_means_t, 
                  x="mean", 
@@ -129,6 +129,30 @@ def plot_avg_by_type(df_mean, title):
         title=title,
         xaxis_title="Average % of GPCD Water Usage",
         yaxis_title="Type of Water Usage",
+        legend_title="Property Type"
+    )
+    
+    return fig.show()
+
+def plot_avg_water_type(df_mean, title):
+    
+    import plotly.express as px
+
+    df_means_t = df_mean.transpose().iloc[41:]
+    df_means_t = df_means_t.assign(pot_or_sec = ['Potable', 'Secondary', 'Potable', 'Secondary', 'Potable', 'Secondary', 'Potable', 'Secondary'])
+    df_means_t = df_means_t.assign(property_type = ['Residential', 'Residential', 'Commercial', 'Commercial', 'Institutional', 'Institutional', 'Industrial', 'Industrial'])
+
+    fig = px.bar(df_means_t, 
+                 x="mean", 
+                 y="property_type", 
+                 color='pot_or_sec', 
+                 title="Wide-Form Input",
+                 orientation='h')
+    # Add axis labels, title, etc.
+    fig.update_layout(
+        title=title,
+        xaxis_title='Average % of GPCD Water Usage',
+        yaxis_title="Property Type",
         legend_title="Property Type"
     )
     
